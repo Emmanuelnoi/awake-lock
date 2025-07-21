@@ -1,62 +1,135 @@
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
+import filesize from 'rollup-plugin-filesize';
+
+const isProduction = process.env.NODE_ENV === 'production';
+const plugins = [
+  resolve({ preferBuiltins: false }),
+  typescript({
+    tsconfig: './tsconfig.json',
+    declaration: true,
+    declarationDir: 'dist/esm',
+    rootDir: 'src',
+  }),
+];
+
+if (isProduction) {
+  plugins.push(
+    terser({
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.debug'],
+      },
+      mangle: {
+        properties: {
+          regex: /^_/,
+        },
+      },
+    }),
+    filesize()
+  );
+}
 
 const config = [
-  // ESM build
+  // Core ESM build (minimal)
   {
-    input: 'src/index.ts',
+    input: 'src/index.core.ts',
     output: {
-      file: 'dist/esm/index.js',
+      file: 'dist/esm/index.core.js',
       format: 'es',
-      sourcemap: true,
+      sourcemap: !isProduction,
+    },
+    plugins,
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      unknownGlobalSideEffects: false,
+    },
+  },
+  // Core CommonJS build (minimal)
+  {
+    input: 'src/index.core.ts',
+    output: {
+      file: 'dist/cjs/index.core.js',
+      format: 'cjs',
+      sourcemap: !isProduction,
+      exports: 'named',
     },
     plugins: [
-      resolve(),
+      resolve({ preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
         declaration: true,
-        declarationDir: 'dist/types',
+        declarationDir: 'dist/cjs',
+        rootDir: 'src',
+        target: 'ES2015', // Lower target for CommonJS
+      }),
+    ],
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      unknownGlobalSideEffects: false,
+    },
+  },
+  // Core UMD build (minimal) - This is our target for 50KB
+  {
+    input: 'src/index.core.ts',
+    output: {
+      file: 'dist/umd/awake-lock.js',
+      format: 'umd',
+      name: 'AwakeLock',
+      sourcemap: !isProduction,
+    },
+    plugins: [
+      resolve({ preferBuiltins: false }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false, // UMD doesn't need declarations
+        rootDir: 'src',
+      }),
+    ],
+    treeshake: {
+      moduleSideEffects: false,
+      propertyReadSideEffects: false,
+      unknownGlobalSideEffects: false,
+    },
+  },
+  // Full ESM build (with all exports) - Use core as input to avoid circular dependency
+  {
+    input: 'src/index.core.ts',
+    output: {
+      file: 'dist/esm/index.js',
+      format: 'es',
+      sourcemap: !isProduction,
+    },
+    plugins: [
+      resolve({ preferBuiltins: false }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: false, // ESM already generates declarations
         rootDir: 'src',
       }),
     ],
     external: ['react', 'vue', '@angular/core', 'rxjs'],
   },
-  // CommonJS build
+  // Full CommonJS build (with all exports) - Use core as input to avoid circular dependency
   {
-    input: 'src/index.ts',
+    input: 'src/index.core.ts',
     output: {
       file: 'dist/cjs/index.js',
       format: 'cjs',
-      sourcemap: true,
+      sourcemap: !isProduction,
       exports: 'named',
     },
     plugins: [
-      resolve(),
+      resolve({ preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
-      }),
-    ],
-    external: ['react', 'vue', '@angular/core', 'rxjs'],
-  },
-  // UMD build
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/umd/awake-lock.js',
-      format: 'umd',
-      name: 'AwakeLock',
-      sourcemap: true,
-      globals: {
-        react: 'React',
-        vue: 'Vue',
-        '@angular/core': 'ng.core',
-        rxjs: 'rxjs',
-      },
-    },
-    plugins: [
-      resolve(),
-      typescript({
-        tsconfig: './tsconfig.json',
+        declaration: false, // ESM already generates declarations
+        rootDir: 'src',
+        target: 'ES2015',
       }),
     ],
     external: ['react', 'vue', '@angular/core', 'rxjs'],

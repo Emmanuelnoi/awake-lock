@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   test:
@@ -88,13 +88,13 @@ jobs:
       
     - name: Assert bundle size
       run: |
-        BUNDLE_SIZE_KB=$(du -k dist/your-main-bundle.js | awk '{print $1}')
-        MAX_ALLOWED_KB=100 # Adjust as needed
-        if (( BUNDLE_SIZE_KB > MAX_ALLOWED_KB )); then
-          echo "Bundle size ($BUNDLE_SIZE_KB KB) exceeds maximum allowed ($MAX_ALLOWED_KB KB)!"
+        UMD_SIZE_KB=$(du -k dist/umd/awake-lock.js | awk '{print $1}')
+        MAX_ALLOWED_KB=50 # Library should be lightweight
+        if (( UMD_SIZE_KB > MAX_ALLOWED_KB )); then
+          echo "UMD bundle size ($UMD_SIZE_KB KB) exceeds maximum allowed ($MAX_ALLOWED_KB KB)!"
           exit 1
         else
-          echo "Bundle size ($BUNDLE_SIZE_KB KB) is within limits."
+          echo "UMD bundle size ($UMD_SIZE_KB KB) is within limits."
         fi
         
     - name: Verify TypeScript declarations

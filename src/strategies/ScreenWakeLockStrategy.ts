@@ -40,7 +40,7 @@ export class ScreenWakeLockStrategy implements FallbackStrategy {
     }
 
     try {
-      const requestPromise = (navigator as any).wakeLock!.request(type);
+      const requestPromise = (navigator as Navigator & { wakeLock: { request: (type: string) => Promise<WakeLockSentinel> } }).wakeLock.request(type);
       const timeout = options.timeout ?? 10000; // 10 second default timeout
 
       const nativeSentinel =

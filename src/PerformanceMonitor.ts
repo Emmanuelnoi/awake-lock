@@ -108,7 +108,7 @@ export class PerformanceMonitor extends EventEmitter<WakeLockEvents> {
       if (!this.battery) return;
 
       // Listen for battery level changes
-      this.battery.onlevelchange = () => {
+      this.battery.onlevelchange = (): void => {
         if (this.battery) {
           this.emit('battery-change', {
             level: this.battery.level,
@@ -123,7 +123,7 @@ export class PerformanceMonitor extends EventEmitter<WakeLockEvents> {
       };
 
       // Listen for charging state changes
-      this.battery.onchargingchange = () => {
+      this.battery.onchargingchange = (): void => {
         if (this.battery) {
           this.emit('battery-change', {
             level: this.battery.level,
@@ -203,7 +203,7 @@ export class PerformanceMonitor extends EventEmitter<WakeLockEvents> {
       const normalizedUsage = Math.min(100, Math.max(0, (duration / 10) * 100));
 
       // Prevent dead code elimination
-      (globalThis as any).__performanceTestResult = result;
+      (globalThis as Record<string, unknown>).__performanceTestResult = result;
 
       return normalizedUsage;
     } catch {

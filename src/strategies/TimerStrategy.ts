@@ -103,7 +103,7 @@ export class TimerStrategy implements FallbackStrategy {
       return (
         typeof Worker !== 'undefined' &&
         typeof window !== 'undefined' &&
-        typeof (window as any).importScripts === 'undefined'
+        typeof (window as Window & { importScripts?: unknown }).importScripts === 'undefined'
       );
     } catch {
       return false;
@@ -129,16 +129,16 @@ export class TimerStrategy implements FallbackStrategy {
       const workerScript = URL.createObjectURL(blob);
       const worker = new Worker(workerScript);
 
-      worker.onmessage = e => {
+      worker.onmessage = (e): void => {
         if (e.data.type === 'tick') {
           // Keep the main thread active by doing minimal work
           const now = Date.now();
           // Store timestamp to prevent optimization
-          (globalThis as any).__wakeLockTimestamp = now;
+          (globalThis as Record<string, unknown>).__wakeLockTimestamp = now;
         }
       };
 
-      worker.onerror = error => {
+      worker.onerror = (error): void => {
         console.warn('Wake lock worker error:', error);
         // Fallback to main thread timer
         this.setupMainThreadTimer(sentinelId, interval, sentinel);
@@ -191,7 +191,7 @@ export class TimerStrategy implements FallbackStrategy {
       }
 
       // Store timestamp to prevent dead code elimination
-      (globalThis as any).__wakeLockTimestamp = now;
+      (globalThis as Record<string, unknown>).__wakeLockTimestamp = now;
     }, interval);
 
     const timerInfo = this.activeTimers.get(sentinelId);
@@ -219,7 +219,7 @@ export class TimerStrategy implements FallbackStrategy {
     // Store cleanup function
     const timer = this.activeTimers.get(sentinelId);
     if (timer) {
-      (timer as any).cleanupVisibility = () => {
+      (timer as { cleanupVisibility?: () => void }).cleanupVisibility = (): void => {
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
     }
@@ -312,8 +312,8 @@ export class TimerStrategy implements FallbackStrategy {
       }
 
       // Clean up visibility listener
-      if ((timer as any).cleanupVisibility) {
-        (timer as any).cleanupVisibility();
+      if ((timer as { cleanupVisibility?: () => void }).cleanupVisibility) {
+        (timer as { cleanupVisibility?: () => void }).cleanupVisibility!();
       }
     } catch (error) {
       console.warn('Error cleaning up timer:', error);

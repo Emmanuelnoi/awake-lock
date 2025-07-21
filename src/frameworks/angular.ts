@@ -67,7 +67,7 @@ declare module 'rxjs/operators' {
 
 import { Injectable, OnDestroy, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { takeUntil, map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 import { WakeLock } from '../WakeLock';
 import {
