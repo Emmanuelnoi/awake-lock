@@ -1,7 +1,8 @@
 {
   "name": "awake-lock",
-  "version": "1.1.0",
-  "description": "A comprehensive wake lock library for preventing device sleep with intelligent fallback strategies",
+  "version": "1.2.0",
+  "type": "module",
+  "description": "A comprehensive wake lock library for preventing device sleep with intelligent fallback strategies and exceptional performance",
   "main": "dist/cjs/index.core.js",
   "module": "dist/esm/index.core.js",
   "umd": "dist/umd/awake-lock.js",
@@ -47,7 +48,11 @@
     "react",
     "vue",
     "angular",
-    "battery-optimization"
+    "battery-optimization",
+    "performance",
+    "browser-compatibility",
+    "fallback-strategies",
+    "optimized"
   ],
   "author": "Emmanuel Noi",
   "license": "MIT",

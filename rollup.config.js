@@ -9,6 +9,7 @@ const plugins = [
   typescript({
     tsconfig: './tsconfig.json',
     declaration: true,
+    declarationMap: true,
     declarationDir: 'dist/esm',
     rootDir: 'src',
   }),
@@ -62,6 +63,7 @@ const config = [
       typescript({
         tsconfig: './tsconfig.json',
         declaration: true,
+        declarationMap: true,
         declarationDir: 'dist/cjs',
         rootDir: 'src',
         target: 'ES2015', // Lower target for CommonJS
@@ -81,14 +83,32 @@ const config = [
       format: 'umd',
       name: 'AwakeLock',
       sourcemap: !isProduction,
+      exports: 'named',
     },
     plugins: [
       resolve({ preferBuiltins: false }),
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false, // UMD doesn't need declarations
+        declarationMap: false,
         rootDir: 'src',
       }),
+      ...(isProduction ? [
+        terser({
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+            pure_funcs: ['console.log', 'console.debug'],
+            dead_code: true,
+            unused: true,
+          },
+          mangle: {
+            properties: {
+              regex: /^_/,
+            },
+          },
+        })
+      ] : []),
     ],
     treeshake: {
       moduleSideEffects: false,
@@ -109,6 +129,7 @@ const config = [
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false, // ESM already generates declarations
+        declarationMap: false,
         rootDir: 'src',
       }),
     ],
@@ -128,6 +149,7 @@ const config = [
       typescript({
         tsconfig: './tsconfig.json',
         declaration: false, // ESM already generates declarations
+        declarationMap: false,
         rootDir: 'src',
         target: 'ES2015',
       }),

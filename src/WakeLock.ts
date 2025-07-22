@@ -315,7 +315,7 @@ export class WakeLock extends EventEmitter<WakeLockEvents> {
       };
 
       window.addEventListener('beforeunload', cleanup);
-      window.addEventListener('unload', cleanup);
+      window.addEventListener('pagehide', cleanup);
     }
   }
 
@@ -330,9 +330,9 @@ export class WakeLock extends EventEmitter<WakeLockEvents> {
         action: 'none',
       });
 
-      // Optionally release wake lock when page is hidden
-      if (isHidden && this.activeSentinel && this.options.batteryOptimization) {
-        this.release().catch(console.warn);
+      // Cleanup when page is hidden (for browser compatibility)
+      if (isHidden) {
+        this.destroy();
       }
     };
 

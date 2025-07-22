@@ -29,5 +29,4 @@ export type {
   WakeLockErrorCode,
 } from './types';
 
-// Default export
-export { WakeLock as default } from './WakeLock';
+// Note: No default export for UMD compatibility
