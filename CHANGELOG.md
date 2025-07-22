@@ -131,5 +131,3 @@ ls -la node_modules/awake-lock/dist/umd/
 - **NPM**: [awake-lock package](https://www.npmjs.com/package/awake-lock)
 
 ---
-
-*For detailed technical information, see [ARCHITECTURE.md](./ARCHITECTURE.md)*
