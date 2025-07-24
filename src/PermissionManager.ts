@@ -73,9 +73,20 @@ export class PermissionManager {
 
     // Try to request permission through wake lock API
     try {
-      if ('wakeLock' in navigator && (navigator as Navigator & { wakeLock?: { request: (type: string) => Promise<{ release: () => Promise<void> }> } }).wakeLock) {
+      if (
+        'wakeLock' in navigator &&
+        (
+          navigator as Navigator & {
+            wakeLock?: { request: (type: string) => Promise<{ release: () => Promise<void> }> };
+          }
+        ).wakeLock
+      ) {
         // Attempt to request wake lock to trigger permission prompt
-        const wakeLock = await (navigator as Navigator & { wakeLock: { request: (type: string) => Promise<{ release: () => Promise<void> }> } }).wakeLock.request(type as 'screen');
+        const wakeLock = await (
+          navigator as Navigator & {
+            wakeLock: { request: (type: string) => Promise<{ release: () => Promise<void> }> };
+          }
+        ).wakeLock.request(type as 'screen');
         await wakeLock.release();
 
         // Update cache with granted permission

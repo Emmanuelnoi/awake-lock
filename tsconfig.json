@@ -24,18 +24,14 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "src/*.ts",
-    "src/utils/**/*.ts",
-    "src/strategies/**/*.ts"
-  ],
+  "include": ["src/*.ts", "src/utils/**/*.ts", "src/strategies/**/*.ts"],
   "exclude": [
-    "node_modules", 
-    "dist", 
+    "node_modules",
+    "dist",
     "tests",
     "src/frameworks/**/*",
     "src/angular.ts",
-    "src/react.ts", 
+    "src/react.ts",
     "src/vue.ts",
     "src/video.ts"
   ]

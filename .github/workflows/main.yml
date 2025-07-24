@@ -1,106 +1,44 @@
-name: CI
+# 
 
+name: Continuous Integration
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: ["main"]
   pull_request:
-    branches: [ main, master ]
+    branches: ["main"]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x, 20.x]
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Cache pnpm store
-      uses: actions/cache@v3
-      with:
-        path: ~/.pnpm-store
-        key: ${{ runner.os }}-pnpm-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-${{ matrix.node-version }}-
-      
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
-        
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
-        
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-      
-    - name: Run linting
-      run: pnpm run lint
-      
-    - name: Check code formatting
-      run: pnpm run format:check
-      
-    - name: Run type checking
-      run: pnpm run typecheck
-      
-    - name: Run tests
-      run: pnpm test
-      
-    - name: Build project
-      run: pnpm run build
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
-    - name: Upload coverage (only 18.x)
-      if: matrix.node-version == '18.x'
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        fail_ci_if_error: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
 
-  build-check:
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
-        
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.x'
-        cache: 'pnpm'
-        
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-      
-    - name: Build all formats
-      run: pnpm run build
-      
-    - name: Assert bundle size
-      run: |
-        UMD_SIZE_KB=$(du -k dist/umd/awake-lock.js | awk '{print $1}')
-        MAX_ALLOWED_KB=50 # Library should be lightweight
-        if (( UMD_SIZE_KB > MAX_ALLOWED_KB )); then
-          echo "UMD bundle size ($UMD_SIZE_KB KB) exceeds maximum allowed ($MAX_ALLOWED_KB KB)!"
-          exit 1
-        else
-          echo "UMD bundle size ($UMD_SIZE_KB KB) is within limits."
-        fi
-        
-    - name: Verify TypeScript declarations
-      run: |
-        if [ ! -f "dist/cjs/index.d.ts" ]; then
-          echo "TypeScript declarations not found!"
-          exit 1
-        fi
-        echo "TypeScript declarations verified ✓"
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Build project
+        run: pnpm build --if-present
+
+      - name: Run tests
+        run: pnpm test

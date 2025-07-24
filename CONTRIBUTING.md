@@ -113,6 +113,7 @@ pnpm run format:check     # Check code formatting
 ### Making Changes
 
 1. **Create a feature branch**:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -122,6 +123,7 @@ pnpm run format:check     # Check code formatting
 3. **Add tests** for new functionality
 
 4. **Run the development checks**:
+
    ```bash
    pnpm run build
    pnpm test
@@ -130,12 +132,14 @@ pnpm run format:check     # Check code formatting
    ```
 
 5. **Commit your changes** with a descriptive message:
+
    ```bash
    git add .
    git commit -m "feat: add new strategy for X"
    ```
 
 6. **Push to your fork**:
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -155,6 +159,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore:` - Maintenance tasks
 
 Example:
+
 ```
 feat(strategies): add WebRTC strategy for video calls
 
@@ -247,6 +252,7 @@ Before submitting an issue:
 ### Bug Reports
 
 Include:
+
 - Clear description of the issue
 - Steps to reproduce
 - Expected vs actual behavior
@@ -256,6 +262,7 @@ Include:
 ### Feature Requests
 
 Include:
+
 - Clear use case description
 - Proposed API or implementation
 - Alternative solutions considered
@@ -288,20 +295,22 @@ Include:
 
 1. **Create strategy file** in `src/strategies/`
 2. **Implement FallbackStrategy interface**:
+
    ```typescript
    export class CustomStrategy implements FallbackStrategy {
      readonly name = 'custom-strategy';
      readonly priority = 5;
-     
+
      isSupported(): boolean {
        // Support detection logic
      }
-     
+
      async request(type: WakeLockType): Promise<WakeLockSentinel> {
        // Implementation
      }
    }
    ```
+
 3. **Add to default strategies** in `WakeLock.ts`
 4. **Write comprehensive tests**
 5. **Update documentation**
@@ -333,7 +342,7 @@ We follow [Semantic Versioning](https://semver.org/):
 4. **Build library**: `pnpm run build`
 5. **Create release commit**: `git commit -m "chore: release v1.x.x"`
 6. **Create git tag**: `git tag v1.x.x`
-7. **Push changes**: `git push origin master --tags`
+7. **Push changes**: `git push origin main --tags`
 8. **Publish to npm**: `pnpm publish`
 
 ## Getting Help

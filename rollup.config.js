@@ -93,22 +93,24 @@ const config = [
         declarationMap: false,
         rootDir: 'src',
       }),
-      ...(isProduction ? [
-        terser({
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-            pure_funcs: ['console.log', 'console.debug'],
-            dead_code: true,
-            unused: true,
-          },
-          mangle: {
-            properties: {
-              regex: /^_/,
-            },
-          },
-        })
-      ] : []),
+      ...(isProduction
+        ? [
+            terser({
+              compress: {
+                drop_console: true,
+                drop_debugger: true,
+                pure_funcs: ['console.log', 'console.debug'],
+                dead_code: true,
+                unused: true,
+              },
+              mangle: {
+                properties: {
+                  regex: /^_/,
+                },
+              },
+            }),
+          ]
+        : []),
     ],
     treeshake: {
       moduleSideEffects: false,

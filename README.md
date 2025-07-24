@@ -378,6 +378,7 @@ pnpm run format
 ### v1.0.0 (Production Ready! 🎉)
 
 **Major Features:**
+
 - ✅ Complete wake lock system with 4 fallback strategies
 - ✅ Framework integrations for React, Vue, and Angular
 - ✅ TypeScript with strict mode and comprehensive type safety
@@ -388,6 +389,7 @@ pnpm run format
 - ✅ MIT license and production-ready package metadata
 
 **Technical Improvements:**
+
 - Migrated from Jest to Vitest for better performance
 - Migrated from npm to pnpm for faster installs
 - Optimized bundle size: 23KB gzipped

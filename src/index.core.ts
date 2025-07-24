@@ -10,11 +10,7 @@ export { TimerStrategy } from './strategies/TimerStrategy';
 
 // Essential utilities only
 export { EventEmitter } from './utils/EventEmitter';
-export {
-  isSSR,
-  isWakeLockSupported,
-  generateUniqueId,
-} from './utils/helpers';
+export { isSSR, isWakeLockSupported, generateUniqueId } from './utils/helpers';
 
 // Essential types only
 export type {

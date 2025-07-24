@@ -21,10 +21,7 @@ export class EventEmitter<T extends Record<string, unknown> = Record<string, unk
     listenerMap.get(type)!.add(listener as EventListener<T[keyof T]>);
   }
 
-  public removeEventListener<K extends keyof T>(
-    type: K,
-    listener: EventListener<T[K]>
-  ): void {
+  public removeEventListener<K extends keyof T>(type: K, listener: EventListener<T[K]>): void {
     this.listeners.get(type)?.delete(listener as EventListener<T[keyof T]>);
     this.onceListeners.get(type)?.delete(listener as EventListener<T[keyof T]>);
   }

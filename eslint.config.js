@@ -31,7 +31,10 @@ export default [
       '@typescript-eslint': typescriptEslint,
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       'no-unused-vars': 'off', // Turned off in favor of @typescript-eslint rule
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
@@ -46,7 +49,7 @@ export default [
       'dist/**/*',
       'node_modules/**/*',
       'src/angular.ts',
-      'src/react.ts', 
+      'src/react.ts',
       'src/vue.ts',
       'src/video.ts',
     ],

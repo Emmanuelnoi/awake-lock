@@ -6,7 +6,11 @@ export function isSSR(): boolean {
 
 export function isWakeLockSupported(): boolean {
   if (isSSR()) return false;
-  return 'wakeLock' in navigator && typeof (navigator as Navigator & { wakeLock?: { request?: unknown } }).wakeLock?.request === 'function';
+  return (
+    'wakeLock' in navigator &&
+    typeof (navigator as Navigator & { wakeLock?: { request?: unknown } }).wakeLock?.request ===
+      'function'
+  );
 }
 
 export function isPermissionsSupported(): boolean {

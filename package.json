@@ -14,7 +14,7 @@
       "require": "./dist/cjs/index.core.js"
     },
     "./core": {
-      "types": "./dist/esm/index.core.d.ts", 
+      "types": "./dist/esm/index.core.d.ts",
       "import": "./dist/esm/index.core.js",
       "require": "./dist/cjs/index.core.js"
     }

@@ -28,7 +28,9 @@ export class AudioContextStrategy implements FallbackStrategy {
 
     try {
       // Check if AudioContext is available
-      const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       return typeof AudioContextClass === 'function';
     } catch {
       return false;
@@ -95,7 +97,9 @@ export class AudioContextStrategy implements FallbackStrategy {
     gainNode: GainNode;
     sentinelId: string;
   }> {
-    const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     const context = new AudioContextClass();
     const sentinelId = generateUniqueId();
 
